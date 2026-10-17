@@ -486,7 +486,8 @@ namespace OpenRA
 		/// </summary>
 		public void ChangeOwnerSync(Player newOwner)
 		{
-			if (Disposed)
+			// The new owner's player actor may already be disposed while the world is shutting down
+			if (Disposed || World.Disposing)
 				return;
 
 			var oldOwner = Owner;

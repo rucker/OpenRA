@@ -264,8 +264,16 @@ namespace OpenRA.Traits
 
 		public void AddSource(object key, SourceType type, PPos[] projectedCells)
 		{
-			if (!sources.TryAdd(key, new ShroudSource(type, projectedCells)))
-				throw new InvalidOperationException("Attempting to add duplicate shroud source");
+			// A stale source for the same key would otherwise crash the game.
+			// Replace it instead, and log the caller so the root cause can be tracked down.
+			if (sources.ContainsKey(key))
+			{
+				Log.Write("debug", $"Replacing duplicate shroud source {key.GetType().Name}");
+				Log.Write("debug", Environment.StackTrace);
+				RemoveSource(key);
+			}
+
+			sources.Add(key, new ShroudSource(type, projectedCells));
 
 			foreach (var puv in projectedCells)
 			{
