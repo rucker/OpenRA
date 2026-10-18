@@ -265,11 +265,10 @@ namespace OpenRA.Traits
 		public void AddSource(object key, SourceType type, PPos[] projectedCells)
 		{
 			// A stale source for the same key would otherwise crash the game.
-			// Replace it instead, and log the caller so the root cause can be tracked down.
+			// Replace it instead; AffectsShroud logs details about the actor.
 			if (sources.ContainsKey(key))
 			{
 				Log.Write("debug", $"Replacing duplicate shroud source {key.GetType().Name}");
-				Log.Write("debug", Environment.StackTrace);
 				RemoveSource(key);
 			}
 
@@ -302,6 +301,8 @@ namespace OpenRA.Traits
 				}
 			}
 		}
+
+		public bool HasSource(object key) => sources.ContainsKey(key);
 
 		public void RemoveSource(object key)
 		{

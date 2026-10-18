@@ -143,7 +143,15 @@ namespace OpenRA.Mods.Common.Traits
 			var cells = ProjectedCells(self);
 
 			foreach (var p in self.World.Players)
+			{
+				// Diagnostics for a stale source left behind by an earlier removal from the world
+				if (p.Shroud.HasSource(this))
+					Log.Write("debug", $"Tick {self.World.WorldTick}: duplicate shroud source from {GetType().Name} on actor " +
+						$"{self.Info.Name} #{self.ActorID} (generation {self.Generation}) owned by {self.Owner.PlayerName}, " +
+						$"for player {p.PlayerName} (relationship {self.Owner.RelationshipWith(p)}, win state {p.WinState})");
+
 				AddCellsToPlayerShroud(self, p, cells);
+			}
 		}
 
 		void INotifyRemovedFromWorld.RemovedFromWorld(Actor self)
