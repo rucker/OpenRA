@@ -52,7 +52,12 @@ namespace OpenRA.Mods.AS.Activities
 			if (hostActor == null)
 				self.QueueActivity(new FindAndDeliverResources(self, harvestedField));
 			else
+			{
+				// The teleport cancelled FindAndDeliverResources, so queue it again with the field we came from.
+				// Otherwise the harvester restarts its search from the refinery and returns to the nearest ore.
 				self.QueueActivity(new MoveToDock(self, hostActor, host, forceEnter));
+				self.QueueActivity(new FindAndDeliverResources(self, harvestedField));
+			}
 
 			return true;
 		}
