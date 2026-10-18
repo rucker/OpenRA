@@ -179,6 +179,10 @@ namespace OpenRA.Mods.Common.Traits
 
 		public bool IsNotHiddenUnit(Actor a)
 		{
+			// Treat actors under an enemy gap generator like cloaked ones: avoided unless nothing else is left
+			if (Player.Shroud.IsHiddenByGeneratedShroud(a.CenterPosition))
+				return false;
+
 			var hasModifier = false;
 			var visModifiers = a.TraitsImplementing<IVisibilityModifier>();
 			foreach (var v in visModifiers)

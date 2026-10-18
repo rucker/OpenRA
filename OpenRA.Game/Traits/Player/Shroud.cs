@@ -423,6 +423,23 @@ namespace OpenRA.Traits
 			return resolvedType.Contains(puv) && resolvedType[puv] > ShroudCellType.Shroud;
 		}
 
+		/// <summary>
+		/// Whether the position is hidden by generated shroud (e.g. a gap generator) and not actively revealed.
+		/// Unlike IsExplored, this is false for cells that are merely unexplored or fogged.
+		/// </summary>
+		public bool IsHiddenByGeneratedShroud(WPos pos)
+		{
+			return IsHiddenByGeneratedShroud(map.ProjectedCellCovering(pos));
+		}
+
+		public bool IsHiddenByGeneratedShroud(PPos puv)
+		{
+			if (Disabled || !shroudGenerationEnabled || !map.Contains(puv))
+				return false;
+
+			return generatedShroudCount[puv] > 0 && visibleCount[puv] == 0;
+		}
+
 		public bool IsVisible(WPos pos)
 		{
 			return IsVisible(map.ProjectedCellCovering(pos));

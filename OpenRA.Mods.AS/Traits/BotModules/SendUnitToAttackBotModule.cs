@@ -298,6 +298,9 @@ namespace OpenRA.Mods.AS.Traits
 				if (!Info.ValidTargets.Overlaps(t) || Info.InvalidTargets.Overlaps(t))
 					return false;
 
+				if (player.Shroud.IsHiddenByGeneratedShroud(a.CenterPosition))
+					return false;
+
 				var hasModifier = false;
 				var visModifiers = a.TraitsImplementing<IVisibilityModifier>();
 				foreach (var v in visModifiers)
