@@ -57,9 +57,9 @@ namespace OpenRA.Mods.Common.Traits
 
 		protected override void RemoveCellsFromPlayerShroud(Actor self, Player p)
 		{
-			if (!info.ValidRelationships.HasRelationship(self.Owner.RelationshipWith(p)))
-				return;
-
+			// Don't check the relationship here: it can change after the source was added
+			// (e.g. defeated players become allies of everyone), which would leave a stale source behind.
+			// RemoveSource is a no-op if no source was added.
 			p.Shroud.RemoveSource(this);
 		}
 
